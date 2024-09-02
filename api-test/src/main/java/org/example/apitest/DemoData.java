@@ -13,7 +13,7 @@ public class DemoData {
     @ExcelProperty("姓名")
     private String name;
     @ExcelProperty("年龄")
-    private String age;
+    private int age;
     @ExcelProperty("出生日期")
     private String birthDate;
 }
