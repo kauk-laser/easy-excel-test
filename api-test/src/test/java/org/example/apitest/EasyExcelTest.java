@@ -70,7 +70,7 @@ public class EasyExcelTest {
     }
 
     @Test
-    public void read_coloumNameNotAtFirstRow_ReadSuccess() {
+    public void read_coloumNameNotAtFirstRow_ReadFaild() {
         /**
          * 读取失败
          * easyExcel规定sheet中的第一行必须是表头/列名
@@ -81,6 +81,15 @@ public class EasyExcelTest {
         Assert.assertThrows(ExcelDataConvertException.class,()->{
             readExcel("excel/coloumNameNotAtFirstRow.xlsx", DemoData.class, demoDataListener);
         });
+    }
+
+    @Test
+    public void read_columnNameNotStartFromFirstColumn_ReadSuccess() {
+        DemoDataListener demoDataListener = new DemoDataListener();
+
+        readExcel("excel/columnNameNotStartFromFirstColumn.xlsx", DemoData.class, demoDataListener);
+
+        Assertions.assertEquals(1, demoDataListener.getReadCount());
     }
 
 
