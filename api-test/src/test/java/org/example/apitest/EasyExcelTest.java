@@ -71,16 +71,14 @@ public class EasyExcelTest {
 
     @Test
     public void read_coloumNameNotAtFirstRow_ReadFaild() {
-        /**
-         * 读取失败
-         * easyExcel规定sheet中的第一行必须是表头/列名
-         * 所以这里会抛出异常
-         * 因为它尝试把sheet中的不在第一行的列名作为数据行读取并转换，发生类型转换错误
+        /*
+          读取失败
+          easyExcel规定sheet中的第一行必须是表头/列名
+          所以这里会抛出异常
+          因为它尝试把sheet中的不在第一行的列名作为数据行读取并转换，发生类型转换错误
          */
         DemoDataListener demoDataListener = new DemoDataListener();
-        Assert.assertThrows(ExcelDataConvertException.class,()->{
-            readExcel("excel/coloumNameNotAtFirstRow.xlsx", DemoData.class, demoDataListener);
-        });
+        Assert.assertThrows(ExcelDataConvertException.class,()-> readExcel("excel/coloumNameNotAtFirstRow.xlsx", DemoData.class, demoDataListener));
     }
 
     @Test
@@ -102,10 +100,51 @@ public class EasyExcelTest {
     }
 
     @Test
+    public void read_noColumnNames_returnNoData() {
+        /*
+          读取失败
+          因为没有列名，所以无法读取数据
+         */
+        DemoDataListener demoDataListener = new DemoDataListener();
+
+        readExcel("excel/noColumnNames.xlsx", DemoData.class, demoDataListener);
+
+        Assertions.assertEquals(0, demoDataListener.getReadCount());
+    }
+
+    @Test
     public void read_RowsAndColoums_returnTure() {
         DemoDataListener demoDataListener = new DemoDataListener();
 
         readExcel("excel/RowsAndColoums.xlsx", DemoData.class, demoDataListener);
+
+        Assertions.assertEquals(8, demoDataListener.getReadCount());
+    }
+
+    @Test
+    public void read_OneOfColumnMissed_readSuccessAndUsingDefaultValueOnMissedColumn(){
+        DemoDataListener demoDataListener = new DemoDataListener();
+
+        readExcel("excel/OneOfColumnMissed.xlsx", DemoData.class, demoDataListener);
+
+        Assertions.assertEquals(8, demoDataListener.getReadCount());
+    }
+
+    @Test
+    public void read_twoTablesAndHaveOneColumnNameIsSame_ReadOneTableAtOnceAndAlawaysReadColumnOccursFirst() {
+        /*
+          读取成功，easyExcel通过DemoData包含的字段来决定需要读取的数据
+          但是要注意，如果有两个相同的列名，那么只会读取第一个
+         */
+        DemoDataListener demoDataListener = new DemoDataListener();
+
+        readExcel("excel/twoTables.xlsx", DemoData.class, demoDataListener);
+
+        Assertions.assertEquals(8, demoDataListener.getReadCount());
+
+        StudentDataListener studentDataListener = new StudentDataListener();
+
+        readExcel("excel/twoTables.xlsx", StudentData.class, studentDataListener);
 
         Assertions.assertEquals(8, demoDataListener.getReadCount());
     }
