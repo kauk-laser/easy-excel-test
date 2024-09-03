@@ -92,6 +92,14 @@ public class EasyExcelTest {
         Assertions.assertEquals(1, demoDataListener.getReadCount());
     }
 
+    @Test
+    public void read_designatedBySheetName_returnDataCountInDesignatedSheet() {
+        DemoDataListener demoDataListener = new DemoDataListener();
+
+        readExcel("excel/designatedBySheetName.xlsx", DemoData.class, demoDataListener,"Sheet2",null);
+
+        Assertions.assertEquals(1, demoDataListener.getReadCount());
+    }
 
     @Test
     public void read_RowsAndColoums_returnTure() {
