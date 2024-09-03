@@ -73,12 +73,26 @@ public class EasyExcelTest {
     public void read_coloumNameNotAtFirstRow_ReadFaild() {
         /*
           读取失败
-          easyExcel规定sheet中的第一行必须是表头/列名
+          easyExcel默认sheet中的第一行必须是表头/列名
           所以这里会抛出异常
           因为它尝试把sheet中的不在第一行的列名作为数据行读取并转换，发生类型转换错误
          */
         DemoDataListener demoDataListener = new DemoDataListener();
         Assert.assertThrows(ExcelDataConvertException.class,()-> readExcel("excel/coloumNameNotAtFirstRow.xlsx", DemoData.class, demoDataListener));
+    }
+
+    @Test
+    public void read_designateRowOfColumnName_ReadSuccess() {
+        /*
+          可以使用sheet的headRowNumber方法指定读取的列名所在的行，来支持第一行不是表头的情况
+         */
+        DemoDataListener demoDataListener = new DemoDataListener();
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("excel/coloumNameNotAtFirstRow.xlsx");
+        if (resourceAsStream != null){
+            EasyExcel.read(resourceAsStream, DemoData.class, demoDataListener).sheet().headRowNumber(5).doRead();
+        }else {
+            System.out.println("要读取的文件不存在");
+        }
     }
 
     @Test
