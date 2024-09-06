@@ -114,6 +114,15 @@ public class EasyExcelTest {
     }
 
     @Test
+    public void read_designatedBySheetNo_returnDataCountInDesignatedSheet() {
+        DemoDataListener demoDataListener = new DemoDataListener();
+
+        readExcel("excel/designatedBySheetNo.xlsx", DemoData.class, demoDataListener,null,1);
+
+        Assertions.assertEquals(1, demoDataListener.getReadCount());
+    }
+
+    @Test
     public void read_noColumnNames_returnNoData() {
         /*
           读取失败
